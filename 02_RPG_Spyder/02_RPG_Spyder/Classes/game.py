@@ -5,6 +5,7 @@ Created on Thu Feb 13 21:54:22 2025
 @author: cybk2
 """
 import random
+from .magic import Spell
 
 class bcolors:
     HEADER = '\033[95m'
@@ -43,6 +44,11 @@ class Person:
             
         return self.hp
     
+    def heal(self, dmg):
+        self.hp += dmg
+        if self.hp > self.maxhp:
+            self.hp = self.maxhp
+    
     def get_hp(self):
         return self.hp
     
@@ -57,12 +63,6 @@ class Person:
     
     def reduce_mp(self, cost):
         self.mp -= cost
-        
-    def get_spell_name(self, i):
-        return self.magic[i]["name"]
-    
-    def get_spell_mp_cost(self, i):
-        return self.magic[i]["cost"]
     
     def choose_Action(self):
         i = 1
@@ -75,5 +75,5 @@ class Person:
         i = 1
         print(bcolors.OKBLUE + bcolors.BOLD + "Magic" + bcolors.ENDC)
         for spell in self.magic:
-            print(str(i) + ":", spell["name"], " (cost: ", str(spell["cost"]) + ")")
+            print(str(i) + ":", spell.name, " (cost: ", str(spell.cost) + ")")
             i += 1

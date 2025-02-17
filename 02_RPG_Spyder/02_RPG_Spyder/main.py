@@ -6,13 +6,22 @@ Created on Thu Feb 13 22:12:20 2025
 """
 
 from Classes.game import Person, bcolors
+from Classes.magic import Spell
 
-magic = [{"name": "Fire", "cost": 10, "dmg": 60},
-         {"name": "Thunder", "cost": 20, "dmg": 120},
-         {"name": "Blizzard", "cost": 15, "dmg": 80}]
+# Create black magic
+fire = Spell("Fire", 10, 100, "black")
+thunder = Spell("Thunder", 10, 100, "black")
+blizzard = Spell("Blizzard", 10, 100, "black")
+meteor = Spell("Meteor", 20, 200, "black")
+quake = Spell("Quake", 14, 140, "black")
 
-player = Person(460, 65, 60, 34, magic)
-enemy= Person(1299, 65, 45, 25, magic)
+# Create withe magic
+cure = Spell("Cure", 12, 120, "white")
+cura = Spell("Cura", 18, 200, "white")
+
+# Instantiate player<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<s
+player = Person(460, 65, 60, 34, [fire, thunder, blizzard, meteor, cure, cura])
+enemy= Person(1299, 65, 45, 25, [])
 
 running = True
 i = 0
@@ -30,22 +39,22 @@ while running:
         dmg = player.generate_damage()
         enemy.take_damage(dmg)
         print("You atacked for: ", dmg, " points of damage. Enemy HP: ", enemy.get_hp())
-    elif index == 1:
+    elif index == 1:1
         player.choose_magic()
         magic_choice = int(input("Choose the magic to use: ")) - 1
-        magic_dmg = player.generate_spell_damage(magic_choice)
-        spell = player.get_spell_name(magic_choice)
-        cost = player.get_spell_mp_cost(i)
+        
+        spell = player.magic[magic_choice]
+        magic_dmg = spell.generate_damage()
         
         current_mp = player.get_mp()
         
-        if cost > current_mp:
+        if spell.cost > current_mp:
             print(bcolors.FAIL + "\nNot enough MP\n" + bcolors.ENDC)
             continue
         
         player.reduce_mp(cost)
         enemy.take_damage(magic_dmg)
-        print(bcolors.OKBLUE + "\n" + spell + " deals: ", str(magic_dmg), "points of damage" + bcolors.ENDC)
+        print(bcolors.OKBLUE + "\n" + spell.name + " deals: ", str(magic_dmg), "points of damage" + bcolors.ENDC)
         
         
     enemy_dmg = enemy.generate_damage()
