@@ -11,3 +11,8 @@ class Item:
         self.type = type
         self.description = description
         self.prop = prop
+
+class InventoryItem:
+    def __init__(self, item, quantity):
+        self.item = item
+        self.quantity = quantity
