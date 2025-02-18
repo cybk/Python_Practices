@@ -7,6 +7,7 @@ Created on Thu Feb 13 22:12:20 2025
 
 from Classes.game import Person, bcolors
 from Classes.magic import Spell
+from Classes.inventory import Item
 
 # Create black magic
 fire = Spell("Fire", 10, 100, "black")
@@ -19,9 +20,20 @@ quake = Spell("Quake", 14, 140, "black")
 cure = Spell("Cure", 12, 120, "white")
 cura = Spell("Cura", 18, 200, "white")
 
-# Instantiate player<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<s
-player = Person(460, 65, 60, 34, [fire, thunder, blizzard, meteor, cure, cura])
-enemy= Person(1299, 65, 45, 25, [])
+# Create some items
+potion = Item("Potion", "potion", "Heals 50 hp", 50)
+hipotion = Item("Hi-Potion", "potion", "Heals 100 hp", 100)
+superpotion = Item("Super Potion", "potion", "Heals 50 hp", 500)
+elixer = Item("Elixer", "elixer", "Fully restored HP/MP", 9999)
+hielixer = Item("Mega Elixer", "elixer", "Fully restored HP/MP", 9999)
+
+grenade = Item("grenade", "attack", "deals 500 damage", 500)
+
+# Instantiate player<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<s+
+player_spells = [fire, thunder, blizzard, meteor, cure, cura]
+player_items = [potion, hipotion, elixer, hielixer, grenade]
+player = Person(460, 65, 60, 34, player_spells, player_items)
+enemy= Person(1299, 65, 45, 25, [], [])
 
 running = True
 i = 0
@@ -39,9 +51,12 @@ while running:
         dmg = player.generate_damage()
         enemy.take_damage(dmg)
         print("You atacked for: ", dmg, " points of damage. Enemy HP: ", enemy.get_hp())
-    elif index == 1:1
+    elif index == 1:
         player.choose_magic()
         magic_choice = int(input("Choose the magic to use: ")) - 1
+        
+        if magic_choice == - 1:
+            continue
         
         spell = player.magic[magic_choice]
         magic_dmg = spell.generate_damage()
@@ -52,10 +67,26 @@ while running:
             print(bcolors.FAIL + "\nNot enough MP\n" + bcolors.ENDC)
             continue
         
-        player.reduce_mp(cost)
-        enemy.take_damage(magic_dmg)
-        print(bcolors.OKBLUE + "\n" + spell.name + " deals: ", str(magic_dmg), "points of damage" + bcolors.ENDC)
+        player.reduce_mp(spell.cost)
         
+        if spell.type == "white":
+            player.heal(magic_dmg)
+            print(bcolors.OKBLUE + "\n" + spell.name + " heals for ", str(magic_dmg), "HP." + bcolors().ENDC)
+        elif spell.type == "black":
+            enemy.take_damage(magic_dmg)
+            print(bcolors.OKBLUE + "\n" + spell.name + " deals: ", str(magic_dmg), "points of damage" + bcolors.ENDC)
+    elif index == 2:
+        player.choose_item()
+        item_choice = int(input("Choose item: ")) - 1
+        
+        if item_choice == - 1:
+            continue
+        
+        item = player.items[item_choice]
+        
+        if item.type == "potion":
+            player.heal(item.prop)
+            print(bcolors.OKGREEN + "\n" + item.name + " heals for: ", item.prop, " HP" + bcolors.ENDC)
         
     enemy_dmg = enemy.generate_damage()
     player.take_damage(enemy_dmg)
